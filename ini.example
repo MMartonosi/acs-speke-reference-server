@@ -1,0 +1,6 @@
+[USER_INFO]
+access_key_id=access key obtained from RAM user
+access_secret=access secret obtained from RAM user
+region_id=cn-hangzhou
+[KEY_INFO]
+key_id=key id obtained from the KMS console
