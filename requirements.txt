@@ -1,0 +1,13 @@
+aliyun-python-sdk-core==2.13.5
+aliyun-python-sdk-core-v3==2.13.3
+aliyun-python-sdk-kms==2.7.1
+aliyun-python-sdk-mts==2.6.1
+appdirs==1.4.3
+attrs==19.1.0
+black==19.3b0
+Click==7.0
+colorama==0.3.3
+jmespath==0.9.4
+pkg-resources==0.0.0
+pycryptodome==3.8.2
+toml==0.10.0
