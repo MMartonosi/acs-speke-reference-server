@@ -4,7 +4,6 @@ import os
 
 CONFIG_ROOT = os.path.abspath(os.path.join(os.path.abspath(__file__), ".."))
 
-COUNTER: int = 0
 LOADED: bool = False
 ACCESS_KEY_ID: str = ""
 ACCESS_SECRET: str = ""
@@ -14,10 +13,7 @@ OSS_ENDPOINT: str = ""
 OSS_BUCKET_NAME: str = ""
 
 
-def get_config():
-    global COUNTER
-    COUNTER += 1
-
+def init():
     global ACCESS_KEY_ID, ACCESS_SECRET, REGION_ID, KEY_ID, OSS_ENDPOINT, OSS_BUCKET_NAME, LOADED
     config = configparser.ConfigParser()
     config.read(os.path.abspath(os.path.join(CONFIG_ROOT, ".ini")))
@@ -27,8 +23,8 @@ def get_config():
     KEY_ID = config.get("KMS", "cmk_id")
     OSS_ENDPOINT = config.get("OSS", "endpoint")
     OSS_BUCKET_NAME = config.get("OSS", "bucket_name")
-    LOADED = 1
+    LOADED = True
 
 
 if not LOADED:
-    get_config()
+    init()

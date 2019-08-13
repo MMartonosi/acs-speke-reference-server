@@ -1,9 +1,6 @@
-import sys
-
-sys.path.append("../../")
+import io
 
 import oss2
-import io
 
 from config import ACCESS_KEY_ID, ACCESS_SECRET, OSS_BUCKET_NAME, OSS_ENDPOINT
 
