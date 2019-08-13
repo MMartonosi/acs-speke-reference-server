@@ -3,23 +3,19 @@ import sys
 sys.path.append("../../")
 
 import oss2
+import io
 
-# from config import get_access_secret
-from itertools import islice
+from config import ACCESS_KEY_ID, ACCESS_SECRET, OSS_BUCKET_NAME, OSS_ENDPOINT
 
-from config import ACCESS_KEY_ID, COUNTER
-
-
-import pdb
-
-pdb.set_trace()
-
-# get_config()
+auth = oss2.Auth(ACCESS_KEY_ID, ACCESS_SECRET)
+bucket = oss2.Bucket(auth, OSS_ENDPOINT, OSS_BUCKET_NAME)
 
 
-# access_key, secret_key = get_access_secret()
-# auth = oss2.Auth(access_key, secret_key)
-# bucket = oss2.Bucket(auth, "oss-cn-shanghai.aliyuncs.com", "keys-test-bucket")
-# for item in islice(oss2.ObjectIterator(bucket), 10):
-#     print(item)
-#     print(item.key)
+def acs_oss_create_key(rhb_uuid, cipher_text):
+    text_stream = io.StringIO(cipher_text)
+    bucket.put_object(f"{rhb_uuid}.txt", text_stream.read())
+
+
+def acs_oss_get_key(rhb_uuid):
+    cipher_text = bucket.get_object(f"{rhb_uuid}.txt")
+    return cipher_text.read()

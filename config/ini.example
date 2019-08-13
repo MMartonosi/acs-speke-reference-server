@@ -1,6 +1,9 @@
-[USER_INFO]
-access_key_id=access key obtained from RAM user
-access_secret=access secret obtained from RAM user
+[RAM]
+access_key_id=xx
+access_secret=xx
 region_id=cn-hangzhou
-[KEY_INFO]
-key_id=key id obtained from the KMS console
+[KMS]
+cmk_id=xx
+[OSS]
+endpoint=oss-cn-shanghai.aliyuncs.com
+bucket_name=keys-test-bucket

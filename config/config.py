@@ -1,12 +1,11 @@
 import configparser
 
-from aliyunsdkcore import client
 import os
 
 CONFIG_ROOT = os.path.abspath(os.path.join(os.path.abspath(__file__), ".."))
 
 COUNTER: int = 0
-LOADED: int = 0
+LOADED: bool = False
 ACCESS_KEY_ID: str = ""
 ACCESS_SECRET: str = ""
 REGION_ID: str = ""
@@ -31,19 +30,5 @@ def get_config():
     LOADED = 1
 
 
-if LOADED == 0:
+if not LOADED:
     get_config()
-
-# def get_acs_client():
-#     access_key_id, access_secret, region_id, key_id = get_config()
-#     return client.AcsClient(access_key_id, access_secret, region_id)
-#
-#
-# def get_access_secret():
-#     access_key_id, access_secret, region_id, key_id = get_config()
-#     return access_secret, access_secret
-#
-#
-# def get_key_id():
-#     access_key_id, access_secret, region_id, key_id = get_config()
-#     return key_id
