@@ -1,4 +1,4 @@
-Service used as to create, store and distribute keys which will be used by rhb?
+Service used as to create, store and distribute keys
 ------------
 
 For keys generation and decrypting this service encapsulated alibaba KMS service to generate data keys and decrypt cipher keys.
