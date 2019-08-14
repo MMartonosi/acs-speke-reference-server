@@ -1,0 +1,27 @@
+from kms_service_wrapper.oss.wrapper import acs_oss_create_key
+
+
+class KeyCache:
+    """
+    This class is responsible for storing keys in the object storage service (OSS) and
+    returning a URL that can return a specific key from the cache.
+    """
+
+    def __init__(self, keystore_bucket, client_url_prefix):
+        self.keystore_bucket = keystore_bucket
+        self.client_url_prefix = client_url_prefix
+
+    def store(self, content_id, key_id, key_value):
+        """
+        Store a key into the cache (OSS) using the content_id as a folder and
+        key_id as the file.
+        """
+        key = f"{content_id}/{key_id}"  # TODO: explore is this going to create folder with content_id as described for aws?
+        acs_oss_create_key(key, key_value)
+
+    def url(self, content_id, key_id):
+        """
+        Return a URL that can be used to retrieve the
+        specified key_id related to content_id
+        """
+        return f"{self.client_url_prefix}/{content_id}/{key_id}"
