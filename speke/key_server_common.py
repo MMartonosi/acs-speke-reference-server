@@ -22,13 +22,13 @@ HLS_SAMPLE_AES_KEY_FORMAT = 'com.apple.streamingkeydelivery'
 HLS_SAMPLE_AES_KEY_FORMAT_VERSIONS = '1'
 
 # settings for widevine drm
-WIDEVINE_PSSH_BOX = os.environ["WIDEVINE_PSSH_BOX"]
-WIDEVINE_PROTECTION_HEADER = os.environ["WIDEVINE_PROTECTION_HEADER"]
+# WIDEVINE_PSSH_BOX = os.environ["WIDEVINE_PSSH_BOX"]
+# WIDEVINE_PROTECTION_HEADER = os.environ["WIDEVINE_PROTECTION_HEADER"]
 
 # settings for playready drm
-PLAYREADY_PSSH_BOX = os.environ["PLAYREADY_PSSH_BOX"]
-PLAYREADY_PROTECTION_HEADER = os.environ["PLAYREADY_PROTECTION_HEADER"]
-PLAYREADY_CONTENT_KEY = os.environ["PLAYREADY_CONTENT_KEY"]
+# PLAYREADY_PSSH_BOX = os.environ["PLAYREADY_PSSH_BOX"]
+# PLAYREADY_PROTECTION_HEADER = os.environ["PLAYREADY_PROTECTION_HEADER"]
+# PLAYREADY_CONTENT_KEY = os.environ["PLAYREADY_CONTENT_KEY"]
 
 # globals for encrypted document responses
 DOCUMENT_KEY_SIZE = 32
@@ -78,19 +78,23 @@ class ServerResponseBuilder:
             self.safe_remove(drm_system, "{urn:aws:amazon:com:speke}ProtectionHeader")
             self.safe_remove(drm_system, "{urn:dashif:org:cpix}PSSH")
         elif system_id.lower() == DASH_CENC_SYSTEM_ID.lower():
-            drm_system.find("{urn:dashif:org:cpix}PSSH").text = WIDEVINE_PSSH_BOX
-            self.safe_remove(drm_system, "{urn:aws:amazon:com:speke}KeyFormat")
-            self.safe_remove(drm_system, "{urn:aws:amazon:com:speke}KeyFormatVersions")
-            self.safe_remove(drm_system, "{urn:aws:amazon:com:speke}ProtectionHeader")
-            self.safe_remove(drm_system, "{urn:dashif:org:cpix}URIExtXKey")
+            pass
+            # TODO: IMPLEMENT
+            # drm_system.find("{urn:dashif:org:cpix}PSSH").text = WIDEVINE_PSSH_BOX
+            # self.safe_remove(drm_system, "{urn:aws:amazon:com:speke}KeyFormat")
+            # self.safe_remove(drm_system, "{urn:aws:amazon:com:speke}KeyFormatVersions")
+            # self.safe_remove(drm_system, "{urn:aws:amazon:com:speke}ProtectionHeader")
+            # self.safe_remove(drm_system, "{urn:dashif:org:cpix}URIExtXKey")
         elif system_id.lower() == PLAYREADY_SYSTEM_ID.lower():
-            drm_system.find("{urn:aws:amazon:com:speke}ProtectionHeader").text = PLAYREADY_PROTECTION_HEADER
-            drm_system.find("{urn:dashif:org:cpix}PSSH").text = PLAYREADY_PSSH_BOX
-            self.safe_remove(drm_system, "{urn:dashif:org:cpix}ContentProtectionData")
-            self.safe_remove(drm_system, "{urn:aws:amazon:com:speke}KeyFormat")
-            self.safe_remove(drm_system, "{urn:aws:amazon:com:speke}KeyFormatVersions")
-            self.safe_remove(drm_system, "{urn:dashif:org:cpix}URIExtXKey")
-            self.use_playready_content_key = True
+            pass
+            # TODO: IMPLEMENT
+            # drm_system.find("{urn:aws:amazon:com:speke}ProtectionHeader").text = PLAYREADY_PROTECTION_HEADER
+            # drm_system.find("{urn:dashif:org:cpix}PSSH").text = PLAYREADY_PSSH_BOX
+            # self.safe_remove(drm_system, "{urn:dashif:org:cpix}ContentProtectionData")
+            # self.safe_remove(drm_system, "{urn:aws:amazon:com:speke}KeyFormat")
+            # self.safe_remove(drm_system, "{urn:aws:amazon:com:speke}KeyFormatVersions")
+            # self.safe_remove(drm_system, "{urn:dashif:org:cpix}URIExtXKey")
+            # self.use_playready_content_key = True
         else:
             raise Exception("Invalid system ID {}".format(system_id))
 
@@ -181,6 +185,8 @@ class ServerResponseBuilder:
         """
         self.fill_request()
         if self.error_message:
+            import pdb
+            pdb.set_trace()
             return {"isBase64Encoded": False, "statusCode": 500, "headers": {"Content-Type": "text/plain"}, "body": self.error_message}
         return {
             "isBase64Encoded": False,

@@ -5,8 +5,8 @@ from aliyunsdkcore.client import AcsClient
 from aliyunsdkkms.request.v20160120 import DecryptRequest
 from aliyunsdkkms.request.v20160120 import GenerateDataKeyRequest
 
-from config import ACCESS_KEY_ID, ACCESS_SECRET, REGION_ID
-from config import KEY_ID
+from kms_service_wrapper.config import ACCESS_KEY_ID, ACCESS_SECRET, REGION_ID
+from kms_service_wrapper.config import KEY_ID
 
 
 def acs_kms_generate_data_key():
