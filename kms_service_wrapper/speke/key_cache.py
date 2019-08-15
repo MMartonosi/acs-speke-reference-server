@@ -7,8 +7,7 @@ class KeyCache:
     returning a URL that can return a specific key from the cache.
     """
 
-    def __init__(self, keystore_bucket, client_url_prefix):
-        self.keystore_bucket = keystore_bucket
+    def __init__(self, client_url_prefix):
         self.client_url_prefix = client_url_prefix
 
     def store(self, content_id, key_id, key_value):
