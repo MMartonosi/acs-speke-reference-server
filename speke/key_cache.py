@@ -9,10 +9,10 @@ class KeyCache:
         Store a key into the cache (OSS) using the content_id as a folder and
         key_id as the file.
         """
-        from oss.wrapper import acs_oss_create_key
+        from services.oss.wrapper import acs_oss_create_secret
 
         key = f"{content_id}/{key_id}"
-        acs_oss_create_key(key, key_value)
+        acs_oss_create_secret(key, key_value)
 
     def url(self, content_id, key_id):
         """

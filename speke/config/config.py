@@ -8,7 +8,7 @@ LOADED: bool = False
 ACCESS_KEY_ID: str = ""
 ACCESS_SECRET: str = ""
 REGION_ID: str = ""
-KEY_ID: str = ""
+# KEY_ID: str = ""
 OSS_ENDPOINT: str = ""
 OSS_BUCKET_NAME: str = ""
 
@@ -20,7 +20,7 @@ def init():
     ACCESS_KEY_ID = config.get("RAM", "access_key_id")
     ACCESS_SECRET = config.get("RAM", "access_secret")
     REGION_ID = config.get("RAM", "region_id")
-    KEY_ID = config.get("KMS", "cmk_id")
+    # KEY_ID = config.get("KMS", "cmk_id")
     OSS_ENDPOINT = config.get("OSS", "endpoint")
     OSS_BUCKET_NAME = config.get("OSS", "bucket_name")
     LOADED = True

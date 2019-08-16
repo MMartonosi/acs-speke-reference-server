@@ -41,7 +41,6 @@ class ServerResponseBuilder:
     This class is responsible generating and returning the
     XML document response to the requesting encryptor
     """
-
     def __init__(self, request_body, cache, generator):
         self.error_message = ""
         self.cache = cache
@@ -184,19 +183,7 @@ class ServerResponseBuilder:
         Get the key request response as an HTTP response.
         """
         self.fill_request()
-        if self.error_message:
-            import pdb
-            pdb.set_trace()
-            return {"isBase64Encoded": False, "statusCode": 500, "headers": {"Content-Type": "text/plain"}, "body": self.error_message}
-        return {
-            "isBase64Encoded": False,
-            "statusCode": 200,
-            "headers": {
-                "Content-Type": "application/xml",
-                "Speke-User-Agent": "SPEKE Reference Server (https://github.com/awslabs/speke-reference-server)"
-            },
-            "body": element_tree.tostring(self.root).decode('utf-8')
-        }
+        return element_tree.tostring(self.root).decode(), {'Content-Type': 'text/xml'}
 
     def insert_encrypted_value(self, element, encryption_algorithm, encrypted_string):
         """
