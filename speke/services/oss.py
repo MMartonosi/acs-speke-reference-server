@@ -1,12 +1,10 @@
 import io
 
 import oss2
+import os
 
-from config import ACCESS_KEY_ID, ACCESS_SECRET, OSS_BUCKET_NAME, OSS_ENDPOINT
-
-auth = oss2.Auth(ACCESS_KEY_ID, ACCESS_SECRET)
-bucket = oss2.Bucket(auth, OSS_ENDPOINT, OSS_BUCKET_NAME)
-
+auth = oss2.Auth(os.environ["ACCESS_KEY_ID"], os.environ["ACCESS_SECRET"])
+bucket = oss2.Bucket(auth, os.environ["OSS_ENDPOINT"], os.environ["OSS_BUCKET_NAME"])
 
 def acs_oss_create_secret(content_id, secret):
     text_stream = io.BytesIO(secret)

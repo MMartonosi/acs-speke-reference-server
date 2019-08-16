@@ -1,9 +1,0 @@
-[RAM]
-access_key_id=xx
-access_secret=xx
-region_id=cn-hangzhou
-[KMS]
-cmk_id=xx
-[OSS]
-endpoint=oss-cn-shanghai.aliyuncs.com
-bucket_name=keys-test-bucket

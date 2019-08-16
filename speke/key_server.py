@@ -33,7 +33,3 @@ def server_handler():  # def server_handler():
     except NoSuchKey as e:
         print(f"Exception {e}")
         return e.body, {'Content-Type': 'text/xml'}
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
