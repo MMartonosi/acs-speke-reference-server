@@ -49,7 +49,7 @@ class KeyGenerator:
         Retrieve the secret value by content ID used for generating keys
         """
 
-        from .services.oss import \
+        from services.oss import \
             acs_oss_get_secret  # TODO: fix this late import
 
         # TODO: implement caching
