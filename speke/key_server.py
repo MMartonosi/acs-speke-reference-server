@@ -6,8 +6,10 @@ from key_cache import KeyCache
 from key_generator import KeyGenerator
 from key_server_common import ServerResponseBuilder
 
-app = Flask(__name__)
+import logging
 
+app = Flask(__name__)
+app.logger.setLevel(logging.INFO)
 
 @app.route("/test", methods=["POST"])
 def server_handler():
