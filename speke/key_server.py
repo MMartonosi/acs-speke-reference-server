@@ -2,9 +2,9 @@ from flask import Flask
 from flask import request
 from oss2.exceptions import NoSuchKey
 
-from speke.key_cache import KeyCache
-from speke.key_generator import KeyGenerator
-from speke.key_server_common import ServerResponseBuilder
+from key_cache import KeyCache
+from key_generator import KeyGenerator
+from key_server_common import ServerResponseBuilder
 
 app = Flask(__name__)
 

@@ -1,4 +1,4 @@
-from speke.services.oss import acs_oss_create_secret  # TODO: fix late import
+from services.oss import acs_oss_create_secret
 
 
 class KeyCache:

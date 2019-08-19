@@ -4,7 +4,7 @@ import os
 # from botocore.exceptions import ClientError
 from oss2.exceptions import NoSuchKey
 
-from speke.services.oss import acs_oss_get_secret, acs_oss_create_secret
+from services.oss import acs_oss_get_secret, acs_oss_create_secret
 
 
 # import secrets
