@@ -1,12 +1,13 @@
 Service used as to create, store and distribute keys
 ------------
 
-For keys generation and decrypting this service encapsulated alibaba KMS service to generate data keys and decrypt cipher keys.
-
-
-To store cipher keys used for content encryption OSS API is used.
-
+To generate key code from aws speke reference server is copied. Salt(content unique)
+used in generation of key is stored on OSS.
 
 To run example demo:
+- ``export ACCESS_KEY_ID=<key id>``
+- ``export ACCESS_SECRET=<secret>``
+- ``export OSS_ENDPOINT=<url of oss endpoint>``
+- ``export OSS_BUCKET_NAME=<name of oss bucket>``
 - ``python demo.py encrypt [text]``
 - ``python demo.py decrypt [encrypted-text]``

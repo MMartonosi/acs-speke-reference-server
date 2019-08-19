@@ -1,11 +1,7 @@
-import hashlib
-
 # import secrets
 
 # import boto3
 # from botocore.exceptions import ClientError
-
-from oss2.exceptions import ClientError
 
 
 class KeyGenerator:
@@ -16,11 +12,9 @@ class KeyGenerator:
     """
 
     def __init__(self):
-        # TODO: change into alibaba cloud local storage dir
-        self.local_secret_folder = "/home/alibaba_speke_testing/"
-
-        # self.secrets_client = boto3.client('secretsmanager')
-
+        pass
+        # TODO: After implementation of caching
+        # self.local_secret_folder = "/home/alibaba_speke_testing/"
 
     # Related to caching
     # def local_secret_path(self, content_id):
@@ -55,7 +49,7 @@ class KeyGenerator:
         Retrieve the secret value by content ID used for generating keys
         """
 
-        from services.oss.wrapper import \
+        from .services.oss import \
             acs_oss_get_secret  # TODO: fix this late import
 
         # TODO: implement caching
@@ -105,6 +99,7 @@ class KeyGenerator:
         """
         Return a symmetric key based on a content ID and key ID
         """
+        # TODO: fix all late imports
         from cryptography.hazmat.primitives import hashes
         from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
         from cryptography.hazmat.backends import default_backend
