@@ -51,7 +51,7 @@ class KeyGenerator:
         """
         Retrieve the secret value by content ID used for generating keys
         """
-        from speke.key_server import app
+        from key_server import app
 
         try:
             # cached locally?
