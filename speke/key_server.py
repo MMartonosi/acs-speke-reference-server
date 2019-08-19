@@ -2,9 +2,9 @@ from flask import Flask
 from flask import request
 from oss2.exceptions import NoSuchKey
 
-from key_cache import KeyCache
-from key_generator import KeyGenerator
-from key_server_common import ServerResponseBuilder
+from speke.key_cache import KeyCache
+from speke.key_generator import KeyGenerator
+from speke.key_server_common import ServerResponseBuilder
 
 app = Flask(__name__)
 
@@ -20,10 +20,10 @@ def server_handler():
         cache = KeyCache()
         generator = KeyGenerator()
         response = ServerResponseBuilder(body, cache, generator).get_response()
-        print(f"Response {response}")
+        # print(f"Response {response}")
         return response
     except NoSuchKey as e:
-        print(f"Exception {e}")
+        app.logger.error(e)
         return e.body, {'Content-Type': 'text/xml'}
 
 

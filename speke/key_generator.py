@@ -1,9 +1,13 @@
-# import secrets
+import os
 
 # import boto3
 # from botocore.exceptions import ClientError
 from oss2.exceptions import NoSuchKey
-import os
+
+from speke.services.oss import acs_oss_get_secret, acs_oss_create_secret
+
+
+# import secrets
 
 
 class KeyGenerator:
@@ -47,68 +51,59 @@ class KeyGenerator:
         """
         Retrieve the secret value by content ID used for generating keys
         """
-        # TODO: fix this late import
-        from services.oss import acs_oss_get_secret, acs_oss_create_secret
+        from speke.key_server import app
 
         try:
             # cached locally?
             secret = self.retrieve_local_secret(content_id)
-            print("GOT SECRET FROM CACHE")
-            print(f"SECRET: {content_id}")
-            print(f"SECRET: {secret}")
+            app.logger.info(f"Retrieved secret from cache for: {content_id}")
         except (IOError, FileNotFoundError):
             # try oss
             try:
                 secret = acs_oss_get_secret(content_id)
                 self.store_local_secret(content_id, secret)
-                print("GOT SECRET FROM OSS")
-                print(f"SECRET: {content_id}")
-                print(f"SECRET: {secret}")
+                app.logger.info(f"Retrieved secret from oss storage for: {content_id}")
             except NoSuchKey:
                 # create new content and salt for it
                 # new secret value
                 # TODO: move this to config of the class
                 content_id_secret_length = 64
                 # generate random string "password"
-                secret = generate_password(content_id_secret_length)
+                secret = self.generate_password(content_id_secret_length)
 
                 # store on oss and in local cache
                 acs_oss_create_secret(content_id, secret)
 
                 self.store_local_secret(content_id, secret)
-                print(f"CREATED SECRET {content_id}")
-                print(f"SECRET {content_id}")
-                print(f"SECRET: {secret}")
+                app.logger.info(f"Created secret for: {content_id}")
         return secret
 
+    def key(self, content_id, key_id):
+        """
+        Return a symmetric key based on a content ID and key ID
+        """
+        # TODO: fix late imports
+        from cryptography.hazmat.primitives import hashes
+        from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+        from cryptography.hazmat.backends import default_backend
 
-def key(self, content_id, key_id):
-    """
-    Return a symmetric key based on a content ID and key ID
-    """
-    # TODO: fix late imports
-    from cryptography.hazmat.primitives import hashes
-    from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-    from cryptography.hazmat.backends import default_backend
+        # Setup for key derivation function (default)
+        backend = default_backend()
+        derived_key_iterations = 5000
+        derived_key_size = 16
+        # Generate a key using a key derivation function (default)
 
-    # Setup for key derivation function (default)
-    backend = default_backend()
-    derived_key_iterations = 5000
-    derived_key_size = 16
-    # Generate a key using a key derivation function (default)
+        salt = self.retrieve_content_id_secret(content_id)
+        kdf = PBKDF2HMAC(algorithm=hashes.SHA256(),
+                         length=derived_key_size,
+                         salt=salt.encode(),
+                         iterations=derived_key_iterations,
+                         backend=backend)
+        return kdf.derive(key_id.encode())
 
-    salt = self.retrieve_content_id_secret(content_id)
-    kdf = PBKDF2HMAC(algorithm=hashes.SHA256(),
-                     length=derived_key_size,
-                     salt=salt,
-                     iterations=derived_key_iterations,
-                     backend=backend)
-    return kdf.derive(key_id.encode('utf-8'))
-
-
-def generate_password(length):
-    # https://docs.python.org/3/library/secrets.html#recipes-and-best-practices
-    import secrets  # TODO: FIX LATE IMPORT
-    import string  # TODO: FIX LATE IMPORT
-    alphabet = string.ascii_letters + string.digits
-    return "".join(secrets.choice(alphabet) for i in range(length))
+    def generate_password(self, length):
+        # https://docs.python.org/3/library/secrets.html#recipes-and-best-practices
+        import secrets  # TODO: FIX LATE IMPORT
+        import string  # TODO: FIX LATE IMPORT
+        alphabet = string.ascii_letters + string.digits
+        return "".join(secrets.choice(alphabet) for i in range(length))

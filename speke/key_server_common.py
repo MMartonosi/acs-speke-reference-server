@@ -107,7 +107,7 @@ class ServerResponseBuilder:
         # check whether to perform CPIX 2.0 document encryption
         encrypted_response_recipients = self.root.findall("./{urn:dashif:org:cpix}DeliveryDataList/{urn:dashif:org:cpix}DeliveryData")
         if encrypted_response_recipients:
-            print("ENCRYPTED-RESPONSE")
+            # print("ENCRYPTED-RESPONSE")
             # generate a random document key and HMAC key
             self.document_key = secrets.token_bytes(DOCUMENT_KEY_SIZE)
             self.hmac_key = secrets.token_bytes(HMAC_KEY_SIZE)
@@ -135,13 +135,14 @@ class ServerResponseBuilder:
                 mac_method_key = element_tree.SubElement(mac_method, "{urn:dashif:org:cpix}Key")
                 self.insert_encrypted_value(mac_method_key, "http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p", base64.b64encode(encoded_hmac_key).decode('utf-8'))
         else:
-            print("CLEAR-RESPONSE")
+            # print("CLEAR-RESPONSE")
+            pass
 
         for drm_system in self.root.findall("./{urn:dashif:org:cpix}DRMSystemList/{urn:dashif:org:cpix}DRMSystem"):
             kid = drm_system.get("kid")
             system_id = drm_system.get("systemId")
             system_ids[system_id] = kid
-            print("SYSTEM-ID {}".format(system_id.lower()))
+            # print("SYSTEM-ID {}".format(system_id.lower()))
             self.fixup_document(drm_system, system_id, content_id, kid)
 
         for content_key in self.root.findall("./{urn:dashif:org:cpix}ContentKeyList/{urn:dashif:org:cpix}ContentKey"):
@@ -157,7 +158,7 @@ class ServerResponseBuilder:
             # store to the key in the cache
             self.cache.store(content_id, kid, key_bytes)
             # log
-            print("NEW-KEY {} {}".format(content_id, kid))
+            # print("NEW-KEY {} {}".format(content_id, kid))
             # update the encrypted response
             if encrypted_response_recipients:
                 # store the key encrypted
