@@ -1,7 +1,6 @@
 import base64
-import os
-import xml.etree.ElementTree as element_tree
 import secrets
+import xml.etree.ElementTree as element_tree
 
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
@@ -10,16 +9,16 @@ from cryptography.hazmat.primitives.asymmetric import padding as asym_padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 # HLS_AES_128_SYSTEM_ID is not an official system ID
-HLS_AES_128_SYSTEM_ID = '81376844-f976-481e-a84e-cc25d39b0b33'
-HLS_SAMPLE_AES_SYSTEM_ID = '94ce86fb-07ff-4f43-adb8-93d2fa968ca2'
-DASH_CENC_SYSTEM_ID = 'edef8ba9-79d6-4ace-a3c8-27dcd51d21ed'
-PLAYREADY_SYSTEM_ID = '9a04f079-9840-4286-ab92-e65be0885f95'
+HLS_AES_128_SYSTEM_ID = "81376844-f976-481e-a84e-cc25d39b0b33"
+HLS_SAMPLE_AES_SYSTEM_ID = "94ce86fb-07ff-4f43-adb8-93d2fa968ca2"
+DASH_CENC_SYSTEM_ID = "edef8ba9-79d6-4ace-a3c8-27dcd51d21ed"
+PLAYREADY_SYSTEM_ID = "9a04f079-9840-4286-ab92-e65be0885f95"
 
 # settings for HLS
-HLS_AES_128_KEY_FORMAT = ''  # 'identity'
-HLS_AES_128_KEY_FORMAT_VERSIONS = ''  # '1'
-HLS_SAMPLE_AES_KEY_FORMAT = 'com.apple.streamingkeydelivery'
-HLS_SAMPLE_AES_KEY_FORMAT_VERSIONS = '1'
+HLS_AES_128_KEY_FORMAT = ""  # 'identity'
+HLS_AES_128_KEY_FORMAT_VERSIONS = ""  # '1'
+HLS_SAMPLE_AES_KEY_FORMAT = "com.apple.streamingkeydelivery"
+HLS_SAMPLE_AES_KEY_FORMAT_VERSIONS = "1"
 
 # settings for widevine drm
 # WIDEVINE_PSSH_BOX = os.environ["WIDEVINE_PSSH_BOX"]
@@ -41,6 +40,7 @@ class ServerResponseBuilder:
     This class is responsible generating and returning the
     XML document response to the requesting encryptor
     """
+
     def __init__(self, request_body, cache, generator):
         self.error_message = ""
         self.cache = cache
@@ -62,17 +62,41 @@ class ServerResponseBuilder:
         """
         if system_id.lower() == HLS_AES_128_SYSTEM_ID.lower():
             ext_x_key = self.cache.url(content_id, kid)
-            drm_system.find("{urn:dashif:org:cpix}URIExtXKey").text = base64.b64encode(ext_x_key.encode('utf-8')).decode('utf-8')
-            drm_system.find("{urn:aws:amazon:com:speke}KeyFormat").text = base64.b64encode(HLS_AES_128_KEY_FORMAT.encode('utf-8')).decode('utf-8')
-            drm_system.find("{urn:aws:amazon:com:speke}KeyFormatVersions").text = base64.b64encode(HLS_AES_128_KEY_FORMAT_VERSIONS.encode('utf-8')).decode('utf-8')
+            drm_system.find("{urn:dashif:org:cpix}URIExtXKey").text = base64.b64encode(
+                ext_x_key.encode("utf-8")
+            ).decode("utf-8")
+            drm_system.find(
+                "{urn:aws:amazon:com:speke}KeyFormat"
+            ).text = base64.b64encode(HLS_AES_128_KEY_FORMAT.encode("utf-8")).decode(
+                "utf-8"
+            )
+            drm_system.find(
+                "{urn:aws:amazon:com:speke}KeyFormatVersions"
+            ).text = base64.b64encode(
+                HLS_AES_128_KEY_FORMAT_VERSIONS.encode("utf-8")
+            ).decode(
+                "utf-8"
+            )
             self.safe_remove(drm_system, "{urn:dashif:org:cpix}ContentProtectionData")
             self.safe_remove(drm_system, "{urn:aws:amazon:com:speke}ProtectionHeader")
             self.safe_remove(drm_system, "{urn:dashif:org:cpix}PSSH")
         elif system_id.lower() == HLS_SAMPLE_AES_SYSTEM_ID.lower():
             ext_x_key = self.cache.url(content_id, kid)
-            drm_system.find("{urn:dashif:org:cpix}URIExtXKey").text = base64.b64encode(ext_x_key.encode('utf-8')).decode('utf-8')
-            drm_system.find("{urn:aws:amazon:com:speke}KeyFormat").text = base64.b64encode(HLS_SAMPLE_AES_KEY_FORMAT.encode('utf-8')).decode('utf-8')
-            drm_system.find("{urn:aws:amazon:com:speke}KeyFormatVersions").text = base64.b64encode(HLS_SAMPLE_AES_KEY_FORMAT_VERSIONS.encode('utf-8')).decode('utf-8')
+            drm_system.find("{urn:dashif:org:cpix}URIExtXKey").text = base64.b64encode(
+                ext_x_key.encode("utf-8")
+            ).decode("utf-8")
+            drm_system.find(
+                "{urn:aws:amazon:com:speke}KeyFormat"
+            ).text = base64.b64encode(HLS_SAMPLE_AES_KEY_FORMAT.encode("utf-8")).decode(
+                "utf-8"
+            )
+            drm_system.find(
+                "{urn:aws:amazon:com:speke}KeyFormatVersions"
+            ).text = base64.b64encode(
+                HLS_SAMPLE_AES_KEY_FORMAT_VERSIONS.encode("utf-8")
+            ).decode(
+                "utf-8"
+            )
             self.safe_remove(drm_system, "{urn:dashif:org:cpix}ContentProtectionData")
             self.safe_remove(drm_system, "{urn:aws:amazon:com:speke}ProtectionHeader")
             self.safe_remove(drm_system, "{urn:dashif:org:cpix}PSSH")
@@ -105,7 +129,9 @@ class ServerResponseBuilder:
         # self.use_playready_content_key = False
         system_ids = {}
         # check whether to perform CPIX 2.0 document encryption
-        encrypted_response_recipients = self.root.findall("./{urn:dashif:org:cpix}DeliveryDataList/{urn:dashif:org:cpix}DeliveryData")
+        encrypted_response_recipients = self.root.findall(
+            "./{urn:dashif:org:cpix}DeliveryDataList/{urn:dashif:org:cpix}DeliveryData"
+        )
         if encrypted_response_recipients:
             # print("ENCRYPTED-RESPONSE")
             # generate a random document key and HMAC key
@@ -114,45 +140,93 @@ class ServerResponseBuilder:
             backend = default_backend()
             for delivery_data in encrypted_response_recipients:
                 delivery_key = delivery_data.find("./{urn:dashif:org:cpix}DeliveryKey")
-                x509data = delivery_key.find("./{http://www.w3.org/2000/09/xmldsig#}X509Data")
-                x509cert = x509data.find("./{http://www.w3.org/2000/09/xmldsig#}X509Certificate")
-                cert = x509.load_der_x509_certificate(base64.b64decode(x509cert.text), backend)
+                x509data = delivery_key.find(
+                    "./{http://www.w3.org/2000/09/xmldsig#}X509Data"
+                )
+                x509cert = x509data.find(
+                    "./{http://www.w3.org/2000/09/xmldsig#}X509Certificate"
+                )
+                cert = x509.load_der_x509_certificate(
+                    base64.b64decode(x509cert.text), backend
+                )
                 public_key = cert.public_key()
                 self.public_key = x509cert.text
-                asym_padder = asym_padding.OAEP(mgf=asym_padding.MGF1(algorithm=hashes.SHA1()), algorithm=hashes.SHA1(), label=None)
+                asym_padder = asym_padding.OAEP(
+                    mgf=asym_padding.MGF1(algorithm=hashes.SHA1()),
+                    algorithm=hashes.SHA1(),
+                    label=None,
+                )
                 # encrypt the document and HMAC keys using the x509 public key
-                encoded_document_key = public_key.encrypt(self.document_key, asym_padder)
+                encoded_document_key = public_key.encrypt(
+                    self.document_key, asym_padder
+                )
                 encoded_hmac_key = public_key.encrypt(self.hmac_key, asym_padder)
                 # insert document key
-                document_key_leaf = element_tree.SubElement(delivery_data, "{urn:dashif:org:cpix}DocumentKey")
-                document_key_leaf.set("Algorithm", "http://www.w3.org/2001/04/xmlenc#aes256-cbc")
-                data_leaf = element_tree.SubElement(document_key_leaf, "{urn:dashif:org:cpix}Data")
-                secret_leaf = element_tree.SubElement(data_leaf, "{urn:ietf:params:xml:ns:keyprov:pskc}Secret")
-                self.insert_encrypted_value(secret_leaf, "http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p", base64.b64encode(encoded_document_key).decode('utf-8'))
+                document_key_leaf = element_tree.SubElement(
+                    delivery_data, "{urn:dashif:org:cpix}DocumentKey"
+                )
+                document_key_leaf.set(
+                    "Algorithm", "http://www.w3.org/2001/04/xmlenc#aes256-cbc"
+                )
+                data_leaf = element_tree.SubElement(
+                    document_key_leaf, "{urn:dashif:org:cpix}Data"
+                )
+                secret_leaf = element_tree.SubElement(
+                    data_leaf, "{urn:ietf:params:xml:ns:keyprov:pskc}Secret"
+                )
+                self.insert_encrypted_value(
+                    secret_leaf,
+                    "http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p",
+                    base64.b64encode(encoded_document_key).decode("utf-8"),
+                )
                 # insert HMAC key
-                mac_method = element_tree.SubElement(delivery_data, "{urn:dashif:org:cpix}MACMethod")
-                mac_method.set("Algorithm", "http://www.w3.org/2001/04/xmldsig-more#hmac-sha512")
-                mac_method_key = element_tree.SubElement(mac_method, "{urn:dashif:org:cpix}Key")
-                self.insert_encrypted_value(mac_method_key, "http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p", base64.b64encode(encoded_hmac_key).decode('utf-8'))
+                mac_method = element_tree.SubElement(
+                    delivery_data, "{urn:dashif:org:cpix}MACMethod"
+                )
+                mac_method.set(
+                    "Algorithm", "http://www.w3.org/2001/04/xmldsig-more#hmac-sha512"
+                )
+                mac_method_key = element_tree.SubElement(
+                    mac_method, "{urn:dashif:org:cpix}Key"
+                )
+                self.insert_encrypted_value(
+                    mac_method_key,
+                    "http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p",
+                    base64.b64encode(encoded_hmac_key).decode("utf-8"),
+                )
         else:
             # print("CLEAR-RESPONSE")
             pass
 
-        for drm_system in self.root.findall("./{urn:dashif:org:cpix}DRMSystemList/{urn:dashif:org:cpix}DRMSystem"):
+        for drm_system in self.root.findall(
+            "./{urn:dashif:org:cpix}DRMSystemList/{urn:dashif:org:cpix}DRMSystem"
+        ):
             kid = drm_system.get("kid")
             system_id = drm_system.get("systemId")
             system_ids[system_id] = kid
             # print("SYSTEM-ID {}".format(system_id.lower()))
             self.fixup_document(drm_system, system_id, content_id, kid)
 
-        for content_key in self.root.findall("./{urn:dashif:org:cpix}ContentKeyList/{urn:dashif:org:cpix}ContentKey"):
+        for content_key in self.root.findall(
+            "./{urn:dashif:org:cpix}ContentKeyList/{urn:dashif:org:cpix}ContentKey"
+        ):
             kid = content_key.get("kid")
             init_vector = content_key.get("explicitIV")
             data = element_tree.SubElement(content_key, "{urn:dashif:org:cpix}Data")
-            secret = element_tree.SubElement(data, "{urn:ietf:params:xml:ns:keyprov:pskc}Secret")
+            secret = element_tree.SubElement(
+                data, "{urn:ietf:params:xml:ns:keyprov:pskc}Secret"
+            )
             # HLS SAMPLE AES Only
-            if init_vector is None and system_ids.get(HLS_SAMPLE_AES_SYSTEM_ID, False) == kid:
-                content_key.set('explicitIV', base64.b64encode(self.generator.key(content_id, kid)).decode('utf-8'))
+            if (
+                init_vector is None
+                and system_ids.get(HLS_SAMPLE_AES_SYSTEM_ID, False) == kid
+            ):
+                content_key.set(
+                    "explicitIV",
+                    base64.b64encode(self.generator.key(content_id, kid)).decode(
+                        "utf-8"
+                    ),
+                )
             # generate the key
             key_bytes = self.generator.key(content_id, kid)
             # store to the key in the cache
@@ -165,44 +239,66 @@ class ServerResponseBuilder:
                 padder = padding.PKCS7(algorithms.AES.block_size).padder()
                 padded_data = padder.update(key_bytes) + padder.finalize()
                 random_iv = secrets.token_bytes(RANDOM_IV_SIZE)
-                cipher = Cipher(algorithms.AES(self.document_key), modes.CBC(random_iv), backend=backend)
+                cipher = Cipher(
+                    algorithms.AES(self.document_key),
+                    modes.CBC(random_iv),
+                    backend=backend,
+                )
                 encryptor = cipher.encryptor()
                 encrypted_data = encryptor.update(padded_data) + encryptor.finalize()
                 cipher_data = random_iv + encrypted_data
-                encrypted_string = base64.b64encode(cipher_data).decode('utf-8')
-                self.insert_encrypted_value(secret, "http://www.w3.org/2001/04/xmlenc#aes256-cbc", encrypted_string)
+                encrypted_string = base64.b64encode(cipher_data).decode("utf-8")
+                self.insert_encrypted_value(
+                    secret,
+                    "http://www.w3.org/2001/04/xmlenc#aes256-cbc",
+                    encrypted_string,
+                )
             else:
-                plain_value = element_tree.SubElement(secret, "{urn:ietf:params:xml:ns:keyprov:pskc}PlainValue")
+                plain_value = element_tree.SubElement(
+                    secret, "{urn:ietf:params:xml:ns:keyprov:pskc}PlainValue"
+                )
                 # PLAYREADY ONLY
                 if self.use_playready_content_key:
                     plain_value.text = PLAYREADY_CONTENT_KEY
                 else:
-                    plain_value.text = base64.b64encode(key_bytes).decode('utf-8')
+                    plain_value.text = base64.b64encode(key_bytes).decode("utf-8")
 
     def get_response(self):
         """
         Get the key request response as an HTTP response.
         """
         self.fill_request()
-        return element_tree.tostring(self.root).decode(), {'Content-Type': 'text/xml'}
+        return element_tree.tostring(self.root).decode(), {"Content-Type": "text/xml"}
 
     def insert_encrypted_value(self, element, encryption_algorithm, encrypted_string):
         """
         Add an encrypted value (key) to the document.
         """
-        encrypted_value = element_tree.SubElement(element, "{urn:ietf:params:xml:ns:keyprov:pskc}EncryptedValue")
-        encryption_method = element_tree.SubElement(encrypted_value, "{http://www.w3.org/2001/04/xmlenc#}EncryptionMethod")
+        encrypted_value = element_tree.SubElement(
+            element, "{urn:ietf:params:xml:ns:keyprov:pskc}EncryptedValue"
+        )
+        encryption_method = element_tree.SubElement(
+            encrypted_value, "{http://www.w3.org/2001/04/xmlenc#}EncryptionMethod"
+        )
         encryption_method.set("Algorithm", encryption_algorithm)
-        cipher_data = element_tree.SubElement(encrypted_value, "{http://www.w3.org/2001/04/xmlenc#}CipherData")
-        cipher_value = element_tree.SubElement(cipher_data, "{http://www.w3.org/2001/04/xmlenc#}CipherValue")
+        cipher_data = element_tree.SubElement(
+            encrypted_value, "{http://www.w3.org/2001/04/xmlenc#}CipherData"
+        )
+        cipher_value = element_tree.SubElement(
+            cipher_data, "{http://www.w3.org/2001/04/xmlenc#}CipherValue"
+        )
         cipher_value.text = encrypted_string
         # calculate and set MAC using HMAC-SHA512 over data in CipherValue
         if not self.hmac_key:
             raise Exception("Missing HMAC key")
-        value_mac = element_tree.SubElement(element, "{urn:ietf:params:xml:ns:keyprov:pskc}ValueMAC")
-        hmac_instance = hmac.HMAC(self.hmac_key, hashes.SHA512(), backend=default_backend())
+        value_mac = element_tree.SubElement(
+            element, "{urn:ietf:params:xml:ns:keyprov:pskc}ValueMAC"
+        )
+        hmac_instance = hmac.HMAC(
+            self.hmac_key, hashes.SHA512(), backend=default_backend()
+        )
         hmac_instance.update(base64.b64decode(encrypted_string))
-        value_mac.text = base64.b64encode(hmac_instance.finalize()).decode('utf-8')
+        value_mac.text = base64.b64encode(hmac_instance.finalize()).decode("utf-8")
 
     def safe_remove(self, element, match):
         """

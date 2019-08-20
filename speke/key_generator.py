@@ -6,7 +6,14 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from oss2.exceptions import NoSuchKey
-from services.oss import acs_oss_get_secret, acs_oss_create_secret
+
+from services.oss import acs_oss_create_secret, acs_oss_get_secret
+
+
+def get_app():
+    from key_server import app
+
+    return app
 
 
 class KeyGenerator:
@@ -21,19 +28,19 @@ class KeyGenerator:
 
     def store_local_secret(self, content_id, secret):
         secret_file = self.local_secret_path(content_id)
-        secret_file = open(secret_file, 'w')
+        secret_file = open(secret_file, "w")
         secret_file.write(secret)
         secret_file.close()
 
     def retrieve_local_secret(self, content_id):
         secret_file = self.local_secret_path(content_id)
-        secret_file = open(secret_file, 'r')
+        secret_file = open(secret_file, "r")
         secret = secret_file.read()
         secret_file.close()
         return secret
 
     def retrieve_content_id_secret(self, content_id):
-        from key_server import app
+        app = get_app()
 
         try:
             secret = self.retrieve_local_secret(content_id)
@@ -54,13 +61,14 @@ class KeyGenerator:
         backend = default_backend()
         derived_key_iterations = 5000
         derived_key_size = 16
-
         salt = self.retrieve_content_id_secret(content_id)
-        kdf = PBKDF2HMAC(algorithm=hashes.SHA256(),
-                         length=derived_key_size,
-                         salt=salt.encode(),
-                         iterations=derived_key_iterations,
-                         backend=backend)
+        kdf = PBKDF2HMAC(
+            algorithm=hashes.SHA256(),
+            length=derived_key_size,
+            salt=salt.encode(),
+            iterations=derived_key_iterations,
+            backend=backend,
+        )
         return kdf.derive(key_id.encode())
 
     def generate_password(self, length):

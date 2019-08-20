@@ -5,15 +5,16 @@ import sys
 from Crypto import Random
 from Crypto.Cipher import AES
 
+from kms.wrapper import acs_kms_decrypt_cipher_key, acs_kms_generate_data_key
+from oss.wrapper import acs_oss_create_secret, acs_oss_get_secret
+
 # import config
 sys.path.append(
     os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "..", "config"))
 )
 
 
-from kms.wrapper import acs_kms_generate_data_key, acs_kms_decrypt_cipher_key
 
-from oss.wrapper import acs_oss_create_secret, acs_oss_get_secret
 
 RHB_UUIDs = [
     "948e65c0-55b6-4ca3-9d5c-feb8e3dc2a3a",
