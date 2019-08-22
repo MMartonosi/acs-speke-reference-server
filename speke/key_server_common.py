@@ -34,7 +34,6 @@ class ServerResponseBuilder:
         self.document_key = None
         self.hmac_key = None
         self.public_key = None
-        self.use_playready_content_key = False
         ET.register_namespace("cpix", "urn:dashif:org:cpix")
         ET.register_namespace("pskc", "urn:ietf:params:xml:ns:keyprov:pskc")
         ET.register_namespace("speke", "urn:aws:amazon:com:speke")
@@ -50,7 +49,6 @@ class ServerResponseBuilder:
         Fill the XML document with data about the requested keys.
         """
         content_id = self.root.get("id")
-        # self.use_playready_content_key = False
         system_ids = {}
         # check whether to perform CPIX 2.0 document encryption
         encrypted_response_recipients = self.root.findall(
