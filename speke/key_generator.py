@@ -7,12 +7,11 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from oss2.exceptions import NoSuchKey
 
-from services.oss import acs_oss_create_secret, acs_oss_get_secret
+from speke.services.oss import acs_oss_create_secret, acs_oss_get_secret
 
 
 def get_app():
-    from key_server import app
-
+    from speke.key_server import app
     return app
 
 

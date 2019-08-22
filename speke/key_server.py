@@ -3,9 +3,9 @@ import logging
 from flask import Flask, request
 from oss2.exceptions import NoSuchKey
 
-from key_cache import KeyCache
-from key_generator import KeyGenerator
-from key_server_common import ServerResponseBuilder
+from speke.key_cache import KeyCache
+from speke.key_generator import KeyGenerator
+from speke.key_server_common import ServerResponseBuilder
 
 app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
